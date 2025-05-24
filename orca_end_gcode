@@ -1,0 +1,24 @@
+{if max_layer_z < max_print_height}
+    {if max_layer_z < max_print_height-10}
+        {if min(max_layer_z+70, max_print_height-10) < 120 }
+            END_PRINT ENDZ=120
+        {else}
+            END_PRINT ENDZ={min(z_offset+min(max_layer_z+70, max_print_height-1), max_print_height)}
+        {endif}
+    {else}
+        END_PRINT ENDZ={z_offset+min(max_layer_z+2, max_print_height)}
+    {endif}
+{else}
+    END_PRINT
+{endif}
+
+
+{if filament_type[0]=="ABS" or filament_type[0]=="PC" or filament_type[0]=="PA-CF" or filament_type[0]=="ASA" or filament_type[0]=="PC-ASA"}
+;POWER_OFF_PRINTER DELAY=45 ; keep the chamber heater (infra-red light bulb) on for 45 minutes
+START_GRADUAL_COOLING START={bed_temperature[0]} TARGET=58 STEP=3 INTERVAL=180
+
+{else}
+POWER_OFF_PRINTER MAX_TEMP=50 ; wait for hotend to cooldown to 50 before powering off
+{endif}
+
+TIMELAPSE_RENDER
