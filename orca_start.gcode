@@ -5,6 +5,7 @@ M106 S0     ; Turn-off part cooling fan
 M220 S100   ; Reset Feedrate
 M221 S100   ; Reset Flowrate
 
+G90
 CLEAR_PAUSE
 BED_MESH_CLEAR
 
@@ -39,6 +40,7 @@ SET_HEATER_TEMPERATURE HEATER=extruder TARGET={nozzle_temperature_initial_layer[
 
 ; =============== Bed Mesh Stuff =====================
 ; Always pass `ADAPTIVE_MARGIN=0` because Orca has already handled `adaptive_bed_mesh_margin` internally
+M117 Creating Bed Mesh
 BED_MESH_CALIBRATE mesh_min={adaptive_bed_mesh_min[0]},{adaptive_bed_mesh_min[1]} mesh_max={adaptive_bed_mesh_max[0]},{adaptive_bed_mesh_max[1]} ADAPTIVE_MARGIN=0 ALGORITHM=[bed_mesh_algo] ADAPTIVE=1 PROFILE="live-adaptive"
 BED_MESH_PROFILE   SAVE="live-adaptive"
 BED_MESH_PROFILE   LOAD="live-adaptive"
@@ -84,6 +86,8 @@ M400
 ; GO TO FIRST PRINT POINT
 _CLIENT_LINEAR_MOVE X={first_layer_print_min[0]} Y={first_layer_print_min[1]} F=10000 ABSOLUTE=1 ; Move to the first layer print position
 
+G90
 ; START_PRINT macro will load default bed mesh profile, so we need to load the live-adaptive profile again
 BED_MESH_PROFILE LOAD="live-adaptive"
+M400 ; Wait for moves to finish
 
