@@ -1,23 +1,23 @@
 MY_TIMELAPSE_RENDER
 END_PRINT
 
-{if filament_type[0]=="ABS" or filament_type[0]=="PC" or filament_type[0]=="PC-CF" or filament_type[0]=="PA-CF" or filament_type[0]=="ASA" or filament_type[0]=="PC-ASA"}
-
-START_GRADUAL_COOLING START={bed_temperature[0]} TARGET=58 STEP=3 INTERVAL=120 RETRY_MAX=2
-
-; 90deg for 20min, then 10min for every dT=-10 till T=50
-;GRADUAL_BED_COOLDOWN
-
-{else}
-
-POWER_OFF_PRINTER MAX_TEMP=70 ; wait for hotend to cooldown to 50 before powering off
-
-{endif}
-
 {if activate_air_filtration[0]}
 AIR_FILTER S={complete_print_exhaust_fan_speed[0]/100.0} MIN=45
 {endif}
-
+ 
+{if filament_type[0]=="ABS" or filament_type[0]=="PC" or filament_type[0]=="PC-CF" or filament_type[0]=="PA-CF" or filament_type[0]=="ASA" or filament_type[0]=="PC-ASA"}
+ 
+START_GRADUAL_COOLING START={bed_temperature[0]} TARGET=58 STEP=3 INTERVAL=120 RETRY_MAX=2
+ 
+; 90deg for 20min, then 10min for every dT=-10 till T=50
+;GRADUAL_BED_COOLDOWN
+ 
+{else}
+ 
+POWER_OFF_PRINTER MAX_TEMP=70 ; wait for hotend to cooldown to 50 before powering off
+ 
+{endif}
+ 
 ;{if max_layer_z + 25 < printable_height}
 ;    END_PRINT DZ=25
 ;{elsif printable_height - max_layer_z > 0 }
@@ -25,4 +25,3 @@ AIR_FILTER S={complete_print_exhaust_fan_speed[0]/100.0} MIN=45
 ;{else}
 ;    END_PRINT DZ=0
 ;{endif}
-
