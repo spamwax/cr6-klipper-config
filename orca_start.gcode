@@ -17,10 +17,19 @@ CHAMBER_HEAT_START TARGET={chamber_temperature[0]} DELTA=1
 ; Adding the following line just to ensure SS knows the idle and starting temperatures
 M104 S140
 
+{if filament_type[0] == "PPS-GF"  or filament_type[0] == "PPS" }
+SET_HEATER_TEMPERATURE HEATER=extruder TARGET=220
+{else}
 SET_HEATER_TEMPERATURE HEATER=extruder TARGET=140
+{endif}
 SET_HEATER_TEMPERATURE HEATER=heater_bed TARGET={bed_temperature_initial_layer_single}
+
 TEMPERATURE_WAIT SENSOR=heater_bed MINIMUM={bed_temperature_initial_layer_single-6}
+{if filament_type[0] == "PPS-GF"  or filament_type[0] == "PPS" }
+TEMPERATURE_WAIT SENSOR=extruder MINIMUM=220
+{else}
 TEMPERATURE_WAIT SENSOR=extruder MINIMUM=140
+{endif}
 
 ; First Home the X-Y axes
 G28 X Y
