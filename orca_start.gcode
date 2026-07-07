@@ -7,9 +7,10 @@ M221 S100   ; Reset Flowrate
 
 CLEAR_PAUSE
 BED_MESH_CLEAR
+CANCEL_CAMERA_OFF
 
-{if chamber_temperature[0] > 0 }
 ; It will only start chamber heater if chamber temp is set in the filament settings.
+{if activate_chamber_temp_control[0] and chamber_temperature[0] > 0 }
 CHAMBER_HEAT_START TARGET={chamber_temperature[0]} DELTA=1
 {endif}
 
@@ -35,6 +36,8 @@ CALIBRATE_Z BED_POSITION={(adaptive_bed_mesh_min[0]+adaptive_bed_mesh_max[0])/2}
 ; Further increase extruder temperature while we are doing bed mesh.
 {if filament_type[0] == "ABS" or filament_type[0] == "PLA" }
 SET_HEATER_TEMPERATURE HEATER=extruder TARGET={nozzle_temperature_initial_layer[0] - 70}
+{elsif filament_type[0] == "PPS-GF"  or filament_type[0] == "PPS" }
+SET_HEATER_TEMPERATURE HEATER=extruder TARGET=210
 {endif}
 
 ; =============== Bed Mesh Stuff =====================
@@ -50,7 +53,7 @@ ASSERT_PROBE_STOWED
 
 {if nozzle_diameter[0] == 0.4}
 {if curr_bed_type=="Textured PEI Plate"}
-SET_GCODE_OFFSET Z_ADJUST=-0.0005 MOVE=1
+SET_GCODE_OFFSET Z_ADJUST=0.0 MOVE=1
 REPORT_Z_OFFSET
 {else}
 SET_GCODE_OFFSET Z_ADJUST=0.0 MOVE=1
